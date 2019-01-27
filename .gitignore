@@ -12,6 +12,8 @@ log.txt
 .vscode/
 npm-debug.log*
 
+config.ts
+
 .idea/
 .ionic/
 .sourcemaps/
