@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
+import 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
+import 'firebase/storage';
+import 'firebase/messaging';
+
 import { fireConfig } from './config';
 
 @Injectable({
@@ -15,42 +21,44 @@ export class FirebaseService {
 
   // ** USER AUTH FUNCTIONS AND ELEMENTS ** //
 
-  initFirebaseAuth() {
-    console.log('fired up firebase auth')
-    firebase.auth().onAuthStateChanged(this.authStateObserver);
+  initFirebaseAuth(authStateOberver) {
+    firebase.auth().onAuthStateChanged(authStateOberver);
+    console.log('init firebaseAuth');
   }
 
-  authStateObserver(user) {
-    console.log('auth state observer')
-    if (user) { 
-      // Get the signed-in user's profile pic and name.
-      let profilePicUrl = this.getProfilePicUrl();
-      let userName = this.getUserName();
+  // authStateObserver(user) {
+  //   console.log('auth state observer');
+  //   if (user) {
+  //     console.log('user is signed in');
+  //     // Get the signed-in user's profile pic and name.
+  //     let profilePicUrl = this.getProfilePicUrl();
+  //     let userName = this.getUserName();
   
-      // Set the user's profile pic and name.
-      document.getElementById('user-pic').style.backgroundImage = 'url(' + this.addSizeToGoogleProfilePic(profilePicUrl) + ')';
-      document.getElementById('user-name').textContent = userName;
+  //     // Set the user's profile pic and name.
+  //     document.getElementById('user-pic').style.backgroundImage = 'url(' + this.addSizeToGoogleProfilePic(profilePicUrl) + ')';
+  //     document.getElementById('user-name').textContent = userName;
   
-      // Show user's profile and sign-out button.
-      document.getElementById('user-name').removeAttribute('hidden');
-      document.getElementById('user-pic').removeAttribute('hidden');
-      document.getElementById('sign-out').removeAttribute('hidden');
+  //     // Show user's profile and sign-out button.
+  //     document.getElementById('user-name').removeAttribute('hidden');
+  //     document.getElementById('user-pic').removeAttribute('hidden');
+  //     document.getElementById('sign-out').removeAttribute('hidden');
   
-      // Hide sign-in button.
-      document.getElementById('sign-in').setAttribute('hidden', 'true');
+  //     // Hide sign-in button.
+  //     document.getElementById('sign-in').setAttribute('hidden', 'true');
   
-      // We save the Firebase Messaging Device token and enable notifications.
-      this.saveMessagingDeviceToken();
-    } else {
-      // Hide user's profile and sign-out button.
-      document.getElementById('user-name').setAttribute('hidden', 'true');
-      document.getElementById('user-pic').setAttribute('hidden', 'true');
-      document.getElementById('sign-out').setAttribute('hidden', 'true');
+  //     // We save the Firebase Messaging Device token and enable notifications.
+  //     this.saveMessagingDeviceToken();
+  //   } else {
+  //     console.log('user is not current signed in')
+  //     // Hide user's profile and sign-out button.
+  //     document.getElementById('user-name').setAttribute('hidden', 'true');
+  //     document.getElementById('user-pic').setAttribute('hidden', 'true');
+  //     document.getElementById('sign-out').setAttribute('hidden', 'true');
   
-      // Show sign-in button.
-      document.getElementById('sign-in').removeAttribute('hidden');
-    }
-  }
+  //     // Show sign-in button.
+  //     document.getElementById('sign-in').removeAttribute('hidden');
+  //   }
+  // }
 
   signIn() {
     console.log('signing in');
@@ -68,7 +76,8 @@ export class FirebaseService {
   }
 
   getProfilePicUrl() {
-    return firebase.auth().currentUser.photoURL || '/assets/profile_placeholder.png';
+    console.log('returning profile pic')
+    return firebase.auth().currentUser.photoURL || './assets/profile_placeholder.png';
   }
 
   getUserName() {
