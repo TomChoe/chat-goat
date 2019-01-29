@@ -8,16 +8,16 @@
           </div>
         </ion-col>
         <ion-col>
-          <div>
-              <div hidden id="user-pic"></div>
-              <div hidden id="user-name"></div>
-              <ion-button hidden id="sign-out" (click)="signOut()">
-                Sign-out
-              </ion-button>
-              <ion-button hidden id="sign-in" (click)="signIn()">
-                <ion-icon name="logo-google"></ion-icon>Sign-in with Google
-              </ion-button>
-            </div>
+          <div *ngIf="signedIn">
+            <ion-button  id="sign-out" (click)="signOut()">
+              Sign-out
+            </ion-button>
+          </div>
+          <div *ngIf="signedIn">
+            <ion-button id="sign-in" (click)="signIn()">
+              <ion-icon name="logo-google"></ion-icon>Sign-in
+            </ion-button>
+          </div>
         </ion-col>
       </ion-row>
     </ion-grid>
@@ -31,7 +31,7 @@
       <div id="messages-card-container" class="mdl-cell mdl-cell--12-col mdl-grid">
   
         <!-- Messages container -->
-        <div id="messages-card" class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--6-col-tablet mdl-cell--6-col-desktop">
+        <div id="messages-card">
           <div class="mdl-card__supporting-text mdl-color-text--grey-600">
             <div id="messages">
               <span id="message-filler"></span>
@@ -41,7 +41,7 @@
                 <input class="mdl-textfield__input" type="text" id="message">
                 <label class="mdl-textfield__label" for="message">Message...</label>
               </div>
-              <button id="submit" disabled type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+              <button id="submit" disabled type="submit">
                 Send
               </button>
             </form>

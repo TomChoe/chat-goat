@@ -77,7 +77,7 @@ export class FirebaseService {
 
   getProfilePicUrl() {
     console.log('returning profile pic')
-    return firebase.auth().currentUser.photoURL || './assets/profile_placeholder.png';
+    return firebase.auth().currentUser.photoURL || '../assets/profile_placeholder.png';
   }
 
   getUserName() {
