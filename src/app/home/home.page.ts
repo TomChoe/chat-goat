@@ -1,5 +1,16 @@
 import { Component } from '@angular/core';
-import { FirebaseService } from '../firebase.service';
+import { Observable } from 'rxjs';
+import * as firebase from 'firebase';
+import 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
+import 'firebase/storage';
+import 'firebase/messaging';
+
+import { fireConfig } from '../config';
+
+const userPicElement: HTMLElement = document.getElementById('user-pic');
+const userNameElement: HTMLElement = document.getElementById('user-name');
 
 @Component({
   selector: 'app-home',
@@ -9,50 +20,75 @@ import { FirebaseService } from '../firebase.service';
 
 export class HomePage {
 
+  user: firebase.User;
+  currentUser: firebase.User;
+  messages: Observable<any[]>;
   signedIn: boolean;
-  currentUser: any;
-  
-  constructor(private firebaseService: FirebaseService) {
-    firebaseService.initFirebaseAuth(this.authStateObserver);
+
+  constructor() {
+    firebase.initializeApp(fireConfig);
+    console.log('firebase initialized');
+    this.initFirebaseAuth()
+    if(firebase.auth().currentUser) {
+      this.user = firebase.auth().currentUser
+      this.signedIn = true;
+    }
   }
 
+  // ** USER AUTH initalizing and functions **
   signIn() {
-    this.firebaseService.signIn();
+    let provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider);
   }
 
   signOut() {
-    this.firebaseService.signOut();
+    firebase.auth().signOut();
+  }
+
+  initFirebaseAuth() {
+    firebase.auth().onAuthStateChanged(this.authStateObserver);
+  }
+
+  addSizeToGoogleProfilePic(url) {
+    if (url.indexOf('googleusercontent.com') !== -1 && url.indexOf('?') === -1) {
+      return url + '?sz=150';
+    }
+    return url;
   }
 
   authStateObserver(user) {
-    console.log('auth state observer');
-  
-    const userPicElement: HTMLElement = document.getElementById('user-pic');
-    const userNameElement: HTMLElement = document.getElementById('user-name');;
-
-    if (user) {
+    if (user) { // User is signed in!
+      this.user = user;
       this.signedIn = true;
-      this.currentUser = user;    
-      
+      console.log('current user -> ' + this.user.displayName + ' state of user signed is -> ' + this.signedIn);
       // Get the signed-in user's profile pic and name.
-      // let profilePicUrl = this.firebaseService.getProfilePicUrl();
-      let profilePicUrl = user.photoURL;
-      // let userName = this.firebaseService.getUserName();
-      let userName = user.displayName;
+      const profilePicUrl = user.photoURL;
+      const userName = user.displayName;
   
       // Set the user's profile pic and name.
-      // userPicElement.style.backgroundImage = 'url(' + this.firebaseService.addSizeToGoogleProfilePic(profilePicUrl) + ')';
+      // userPicElement.style.backgroundImage = 'url(' + this.addSizeToGoogleProfilePic(profilePicUrl) + ')';
       // userNameElement.textContent = userName;
   
+      // // Show user's profile and sign-out button.
+      // userNameElement.removeAttribute('hidden');
+      // userPicElement.removeAttribute('hidden');
+      // signOutButtonElement.removeAttribute('hidden');
+  
+      // Hide sign-in button.
+      // signInButtonElement.setAttribute('hidden', 'true');
+  
       // We save the Firebase Messaging Device token and enable notifications.
-      // this.firebaseService.saveMessagingDeviceToken();
-    } else {
+      // saveMessagingDeviceToken();
+    } else { // User is signed out!
       this.signedIn = false;
-      console.log('user is not current signed in')
-
-      // Show sign-in button.
+      // Hide user's profile and sign-out button.
+      // userNameElement.setAttribute('hidden', 'true');
+      // userPicElement.setAttribute('hidden', 'true');
+      // signOutButtonElement.setAttribute('hidden', 'true');
+  
+      // // Show sign-in button.
+      // signInButtonElement.removeAttribute('hidden');
     }
-    console.log('current user -> ', this.currentUser.displayName);
-    console.log('current signed in bool state -> ', this.signedIn)
   }
+
 }

@@ -1,66 +1,53 @@
 <ion-header>
   <ion-toolbar>
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <div>
-            <h3>GOAT Chat</h3>
-          </div>
-        </ion-col>
-        <ion-col>
-          <div *ngIf="signedIn">
-            <ion-button  id="sign-out" (click)="signOut()">
-              Sign-out
-            </ion-button>
-          </div>
-          <div *ngIf="signedIn">
-            <ion-button id="sign-in" (click)="signIn()">
-              <ion-icon name="logo-google"></ion-icon>Sign-in
-            </ion-button>
-          </div>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <div *ngIf='signedIn' slot="secondary">
+      {{user.displayName}}
+    </div>
+    <ion-buttons slot="primary">
+      <ion-button size="small" 
+                  color="secondary"
+                  (click)="signIn()">
+        <ion-icon slot="icon-only" name="logo-google"></ion-icon>
+        Sign In
+      </ion-button>
+    </ion-buttons>
+    <ion-title>GOAT chat</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-  
-  <div>
-    <main>
-      <div id="messages-card-container" class="mdl-cell mdl-cell--12-col mdl-grid">
-  
-        <!-- Messages container -->
-        <div id="messages-card">
-          <div class="mdl-card__supporting-text mdl-color-text--grey-600">
-            <div id="messages">
-              <span id="message-filler"></span>
-            </div>
-            <form id="message-form" action="#">
-              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input class="mdl-textfield__input" type="text" id="message">
-                <label class="mdl-textfield__label" for="message">Message...</label>
-              </div>
-              <button id="submit" disabled type="submit">
-                Send
-              </button>
-            </form>
-            <form id="image-form" action="#">
-              <input id="mediaCapture" type="file" accept="image/*" capture="camera">
-              <button id="submitImage" title="Add an image" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--amber-400 mdl-color-text--white">
-                <i class="material-icons">image</i>
-              </button>
-            </form>
-          </div>
-        </div>
-  
-        <div id="must-signin-snackbar" class="mdl-js-snackbar mdl-snackbar">
-          <div class="mdl-snackbar__text"></div>
-          <button class="mdl-snackbar__action" type="button"></button>
-        </div>
-  
-      </div>
-    </main>
-  </div>
+  <main class="mdl-layout__content mdl-color--grey-100">
+    <div id="messages-card-container" class="mdl-cell mdl-cell--12-col mdl-grid">
 
+      <!-- Messages container -->
+      <div id="messages-card" class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--6-col-tablet mdl-cell--6-col-desktop">
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <div id="messages">
+            <span id="message-filler"></span>
+          </div>
+          <form id="message-form" action="#">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="text" id="message">
+              <label class="mdl-textfield__label" for="message">Message...</label>
+            </div>
+            <button id="submit" disabled type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+              Send
+            </button>
+          </form>
+          <form id="image-form" action="#">
+            <input id="mediaCapture" type="file" accept="image/*" capture="camera">
+            <button id="submitImage" title="Add an image" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--amber-400 mdl-color-text--white">
+              <i class="material-icons">image</i>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div id="must-signin-snackbar" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
+      </div>
+
+    </div>
+  </main>
 </ion-content>
