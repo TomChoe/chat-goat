@@ -1,16 +1,21 @@
 <ion-header>
   <ion-toolbar>
-    <div *ngIf='signedIn' slot="secondary">
-      {{user.displayName}}
+    <div *ngIf="currentUser" slot="secondary">   <!-- * will add else block to show not signed in -->
+      {{ (currentUser | async)?.displayName }}
     </div>
     <ion-buttons slot="primary">
-      <ion-button size="small" 
+      <ion-button *ngIf="!currentUser" size="small" 
                   color="secondary"
                   (click)="signIn()">
         <ion-icon slot="icon-only" name="logo-google"></ion-icon>
         Sign In
       </ion-button>
+      <ion-button *ngIf="currentUser" size="small"
+                  (click)="signOut()">
+        Log Out
+      </ion-button>
     </ion-buttons>
+
     <ion-title>GOAT chat</ion-title>
   </ion-toolbar>
 </ion-header>

@@ -7,8 +7,6 @@ import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/messaging';
 
-import { fireConfig } from '../config';
-
 const userPicElement: HTMLElement = document.getElementById('user-pic');
 const userNameElement: HTMLElement = document.getElementById('user-name');
 
@@ -20,19 +18,14 @@ const userNameElement: HTMLElement = document.getElementById('user-name');
 
 export class HomePage {
 
-  user: firebase.User;
-  currentUser: firebase.User;
+  user: Observable<firebase.User>;
+  currentUser: firebase.User;;
   messages: Observable<any[]>;
   signedIn: boolean;
 
   constructor() {
-    firebase.initializeApp(fireConfig);
     console.log('firebase initialized');
-    this.initFirebaseAuth()
-    if(firebase.auth().currentUser) {
-      this.user = firebase.auth().currentUser
-      this.signedIn = true;
-    }
+    this.initFirebaseAuth();
   }
 
   // ** USER AUTH initalizing and functions **
@@ -56,14 +49,19 @@ export class HomePage {
     return url;
   }
 
-  authStateObserver(user) {
-    if (user) { // User is signed in!
-      this.user = user;
-      this.signedIn = true;
-      console.log('current user -> ' + this.user.displayName + ' state of user signed is -> ' + this.signedIn);
-      // Get the signed-in user's profile pic and name.
-      const profilePicUrl = user.photoURL;
-      const userName = user.displayName;
+  authStateObserver(u) {
+    if (u) { // User is signed in!
+      
+      this.user.subscribe((user: firebase.User) => {
+        console.log(user);
+        this.currentUser = user;
+        this.signedIn = true;
+      })
+
+      console.log('observing current user -> ', this.currentUser.displayName);
+      
+      const profilePicUrl = u.photoURL;
+      const userName = u.displayName;
   
       // Set the user's profile pic and name.
       // userPicElement.style.backgroundImage = 'url(' + this.addSizeToGoogleProfilePic(profilePicUrl) + ')';
@@ -79,8 +77,10 @@ export class HomePage {
   
       // We save the Firebase Messaging Device token and enable notifications.
       // saveMessagingDeviceToken();
+      
     } else { // User is signed out!
       this.signedIn = false;
+      console.log('user is not currently signed in -> ', this.currentUser);
       // Hide user's profile and sign-out button.
       // userNameElement.setAttribute('hidden', 'true');
       // userPicElement.setAttribute('hidden', 'true');
